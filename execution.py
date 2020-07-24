@@ -5,7 +5,7 @@ from ripser import ripser
 from persim import plot_diagrams
 import matlab.engine
 
-from functions import open_file, select_patches
+from functions import open_file, select_patches, select_all_patches
 from preprocess import preprocess
 from dense_subset import dense_subset
 from use_javaplex import use_javaplex
@@ -39,13 +39,36 @@ data = preprocess(data)
 dense_data_angular = dense_subset(take_subset(data, 15), 15)
 dense_data_eucl = dense_subset(data, 100, angular = False)
 # Tried to reduce noise by substituting patch by mean of its nearest neighbors but it did not change the results 
-'''
 
-dense_data_angular = pd.read_pickle("dense_data_angular.pkt")
+
+dense_data_angular = pd.read_pickle("C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\dense_data_angular.pkt")
 dense_data_eucl = pd.read_pickle("dense_data_all_100.pkt")
 # 1.4) MatLab
 #use_javaplex(take_subset(dense_data_angular, 10), "Dense Subset Angular euclmat ", angular = False)
 #use_javaplex(take_subset(dense_data_eucl, 1.5), "Dense Subset All euclmat  ", angular = False)
 
-use_javaplex(take_subset(dense_data_angular, 10), "Dense Subset Angular randomlandmark ")
-use_javaplex(take_subset(dense_data_eucl, 1.5), "Dense Subset All randomlandmark ")
+#use_javaplex(take_subset(dense_data_angular, 10), "Dense Subset Angular randomlandmark ")
+#use_javaplex(take_subset(dense_data_eucl, 1.5), "Dense Subset All randomlandmark ")
+'''
+
+# 2) For Faces
+from PIL import Image
+
+# 2.1) 
+list_names, list_intervals = [], []
+path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\londondb_morph_combined_alpha0.5_passport-scale_15kb\\"
+for file in os.listdir((path)): # contains pixel data from all images
+    print(file)
+    img = Image.open(path+file).convert('L')  # convert image to 8-bit grayscale
+    width, height = img.size
+    img = np.array(img.getdata()).reshape(height, width)
+    data = select_all_patches(img)
+    data = data.sort_values(by = "D_Norm", ascending = False).reset_index(drop=True)
+    data = data.loc[range(int(round(len(data)*0.2)))] # select 20% of patches with highest contrast
+    # 2.2) 
+    data = preprocess(data)
+    # 2.3) 
+    dense_data = dense_subset(data, 10, angular = False)
+    # 2.4)
+    name = "".join(letter for letter in [file[i] for i in [0,1,2]]) + "+" + "".join(letter for letter in [file[i] for i in [7,8,9]])
+    intervals = use_javaplex(take_subset(dense_data, 5), name)

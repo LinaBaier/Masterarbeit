@@ -24,13 +24,15 @@ def use_javaplex(data, name, angular=True):
     eng = matlab.engine.start_matlab("-desktop")
     eng.cd(r"C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Matlab")
     max_dimension = 3
-    max_filtration_value = 0.6
-    num_divisions = 30
+    max_filtration_value = 1
+    # num_divisions = 30 # for 1)
+    num_divisions = 20 # for 2)
     nu = 1
-    eng.calculate_intervals(matlab.double(distance_matrix.tolist()), 
+    intervals = eng.calculate_intervals(matlab.double(distance_matrix.tolist()), 
                             max_dimension, 
                             max_filtration_value, 
                             num_divisions, 
                             nu,
                             name)
     eng.quit()
+    return intervals

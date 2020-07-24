@@ -48,6 +48,21 @@ def select_patches(img, no_patches): # randomly select 5000 patches in each imag
         D_norms.append(D_norm)
     return pd.DataFrame(dict(Patch = patches, D_Norm = D_norms))
 
+def select_all_patches(img): # select all patches
+    patches = []
+    D_norms = []
+    x_max, y_max = len(img[0])-2, len(img)-2
+    for x in range(x_max):
+        for y in range(y_max):
+            patch = np.array([[img[y+c][x] for c in [0, 1, 2]],
+                             [img[y+c][x+1] for c in [0, 1, 2]],
+                             [img[y+c][x+2] for c in [0, 1, 2]]])
+            patch = np.log(patch)
+            D_norm = calc_norm(patch)
+            patches.append(patch)
+            D_norms.append(D_norm)
+    return pd.DataFrame(dict(Patch = patches, D_Norm = D_norms))
+
 def plot_pixels(img):
     plt.imshow(img, cmap="gray")
     plt.show()
