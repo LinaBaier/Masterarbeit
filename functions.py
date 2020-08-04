@@ -48,7 +48,8 @@ def select_patches(img, no_patches): # randomly select 5000 patches in each imag
         D_norms.append(D_norm)
     return pd.DataFrame(dict(Patch = patches, D_Norm = D_norms))
 
-def select_all_patches(img): # select all patches
+# Select all patches
+def select_all_patches(img): 
     patches = []
     D_norms = []
     x_max, y_max = len(img[0])-2, len(img)-2
@@ -63,6 +64,14 @@ def select_all_patches(img): # select all patches
             D_norms.append(D_norm)
     return pd.DataFrame(dict(Patch = patches, D_Norm = D_norms))
 
+# Plot the image
 def plot_pixels(img):
     plt.imshow(img, cmap="gray")
     plt.show()
+
+# Take a smaller subset due to computational complexity of knn
+def take_subset(data, percentage):
+    no_datapoints = int(round(len(data) * percentage / 100))
+    random_list = npr.choice(range(len(data)), no_datapoints, replace = False)
+    indeces = [data.index[i] for i in random_list] 
+    return data.loc[indeces]

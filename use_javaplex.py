@@ -21,12 +21,12 @@ def calculate_distance_matrix(data, angular):
 # Use Javaplex in MatLab
 def use_javaplex(data, name, angular=True):
     distance_matrix = calculate_distance_matrix(data, angular)
-    eng = matlab.engine.start_matlab("-desktop")
+    eng = matlab.engine.start_matlab() #"-desktop"
     eng.cd(r"C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Matlab")
     max_dimension = 3
     max_filtration_value = 1
     # num_divisions = 30 # for 1)
-    num_divisions = 20 # for 2)
+    num_divisions = 15 # for 2)
     nu = 1
     intervals = eng.calculate_intervals(matlab.double(distance_matrix.tolist()), 
                             max_dimension, 
