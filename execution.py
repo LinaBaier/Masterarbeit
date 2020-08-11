@@ -10,6 +10,7 @@ from preprocess import preprocess
 from dense_subset import dense_subset
 from use_javaplex import use_javaplex
 from save_intervals import save_intervals
+from random_forest import random_forest
 
 
 
@@ -56,7 +57,7 @@ data_single = data_single.loc[range(int(round(len(data_single)*0.2)))]
 data_single = preprocess(data_single, 100, "") 
 dense_data_single_eucl = dense_subspace(data_single, 10, 15, angular=False)
 dense_data_single_angular = dense_subspace(data_single, 10, 15)
-'''
+
 
 # 2) For Faces
 from PIL import Image
@@ -83,7 +84,7 @@ for file in os.listdir((path)): # contains pixel data from all images
     intervals = use_javaplex(take_subset(dense_data, 50), name)
     save_intervals(name, intervals)
 
-'''
+
     # 2.1) 
 path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\test\\"
 for file in os.listdir((path)): # contains pixel data from all images
@@ -102,4 +103,9 @@ for file in os.listdir((path)): # contains pixel data from all images
     name = "".join(letter for letter in [file[i] for i in [0,1,2]])
     intervals = use_javaplex(take_subset(dense_data, 50), name)
     save_intervals(name, intervals)
+
 '''
+path_morphs = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse.csv"
+path_originals = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse_Originale.csv"
+prec = random_forest(path_morphs, path_originals)
+print("We get a precision of: ", prec)

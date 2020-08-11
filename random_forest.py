@@ -50,9 +50,11 @@ def under_sample_data_test(data):
 def calc_score(data_train, data_test, size_data_train):
     data_train = over_under_sample_data_train(data_train, size_data_train)
     data_test = under_sample_data_test(data_test)
+    print(len(data_test), len(data_test.loc[data_test.Morph==0]))
     X_train, y_train = data_train[["Number0", "Number1", "Number2","Longest1", "Longest2", "Birth Longest1", "Birth Longest2", "Second Longest0", "Birth Second Longest0"]], data_train["Morph"] 
     X_test, y_test = data_test[["Number0", "Number1", "Number2","Longest1", "Longest2", "Birth Longest1", "Birth Longest2", "Second Longest0", "Birth Second Longest0"]], data_test["Morph"]
-    clf = RandomForestClassifier(max_depth=2, random_state=0).fit(X_train, y_train)
+    clf = RandomForestClassifier(max_depth=4, random_state=0).fit(X_train, y_train)
+    print(clf.feature_importances_)
     y_pred_proba = clf.predict_proba(X_test)
     number_morphs = sum(y_test)
     indeces = pd.DataFrame([proba[1] for proba in y_pred_proba]).sort_values(by=[0], ascending=False).head(number_morphs).index
@@ -71,20 +73,14 @@ def cross_fold(data, number_folds, size_data_train):
         for j in range(number_folds):
             if j != i:
                 data_train = data_train.append(folds[j])
-        print(len(data_test), len(data_train))
         prec += calc_score(data_train, data_test, size_data_train)
     return (prec / number_folds)
 
-def notsure(path_morphs, path_originals):
+def random_forest(path_morphs, path_originals):
     results_morphs = determine_features(path_morphs)
     results_originals = determine_features(path_originals)
     results_morphs["Morph"] = 1
     results_originals["Morph"] = 0
     results = results_morphs.append(results_originals).reset_index(drop=True).drop_duplicates("Image")
     results = results.sample(frac=1).reset_index(drop=True)
-    return cross_fold(results, 10, 500)
-
-path_morphs = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse.csv"
-path_originals = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse_Originale.csv"
-prec = notsure(path_morphs, path_originals)
-print("We get a precision of: ", prec)
+    return cross_fold(results, 5, 500)
