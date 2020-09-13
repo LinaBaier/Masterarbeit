@@ -1,4 +1,4 @@
-# Thesis-TDA
+# Masterarbeit-TDA
 
 Code for my masters thesis "Topologische Datenanalyse: Persistente Homologie in Theorie und Praxis"
 
