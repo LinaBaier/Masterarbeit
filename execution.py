@@ -58,17 +58,13 @@ data_single = preprocess(data_single, 100, "")
 dense_data_single_eucl = dense_subspace(data_single, 10, 15, angular=False)
 dense_data_single_angular = dense_subspace(data_single, 10, 15)
 
-
 # 2) For Faces
 from PIL import Image
 
 # 2.1) 
-path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\londondb_morph_combined_alpha0.5_passport-scale_15kb\\"
+path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Morphs\\"
 for file in os.listdir((path)): # contains pixel data from all images
     print(file)
-
-    name = "".join(letter for letter in [file[i] for i in [0,1,2]]) + "+" + "".join(letter for letter in [file[i] for i in [7,8,9]])
-
     img = Image.open(path+file).convert('L')  # convert image to 8-bit grayscale
     width, height = img.size
     img = np.array(img.getdata()).reshape(height, width)
@@ -85,8 +81,8 @@ for file in os.listdir((path)): # contains pixel data from all images
     save_intervals(name, intervals)
 
 
-    # 2.1) 
-path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\test\\"
+# 2.1) 
+path = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Originals\\"
 for file in os.listdir((path)): # contains pixel data from all images
     print(file)
     img = Image.open(path+file).convert('L')  # convert image to 8-bit grayscale
@@ -105,7 +101,7 @@ for file in os.listdir((path)): # contains pixel data from all images
     save_intervals(name, intervals)
 
 '''
+
 path_morphs = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse.csv"
 path_originals = "C:\\Users\\Lina\\Google Drive\\Masterarbeit\\Python\\Code\\Ergebnisse_Originale.csv"
-prec = random_forest(path_morphs, path_originals)
-print("We get a precision of: ", prec)
+prec, prec_random = random_forest(path_morphs, path_originals)

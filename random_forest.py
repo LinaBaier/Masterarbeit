@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import ast
+import random
 from sklearn.ensemble import RandomForestClassifier
 
 def determine_features(path):
@@ -50,31 +51,37 @@ def under_sample_data_test(data):
 def calc_score(data_train, data_test, size_data_train):
     data_train = over_under_sample_data_train(data_train, size_data_train)
     data_test = under_sample_data_test(data_test)
-    print(len(data_test), len(data_test.loc[data_test.Morph==0]))
     X_train, y_train = data_train[["Number0", "Number1", "Number2","Longest1", "Longest2", "Birth Longest1", "Birth Longest2", "Second Longest0", "Birth Second Longest0"]], data_train["Morph"] 
     X_test, y_test = data_test[["Number0", "Number1", "Number2","Longest1", "Longest2", "Birth Longest1", "Birth Longest2", "Second Longest0", "Birth Second Longest0"]], data_test["Morph"]
     clf = RandomForestClassifier(max_depth=4, random_state=0).fit(X_train, y_train)
-    print(clf.feature_importances_)
+    # print(clf.feature_importances_)
     y_pred_proba = clf.predict_proba(X_test)
     number_morphs = sum(y_test)
     indeces = pd.DataFrame([proba[1] for proba in y_pred_proba]).sort_values(by=[0], ascending=False).head(number_morphs).index
     y_pred = np.zeros(len(data_test))
     for i in indeces:
         y_pred[i] = 1
-    return sum(np.array(y_pred)*np.array(y_test)) / number_morphs
+    # compare to random assignment of number_morphs images as morphs
+    indeces_random = random.sample(range(len(data_test)), number_morphs)
+    y_pred_random = np.zeros(len(data_test))
+    for i in indeces_random:
+        y_pred_random[i] = 1
+
+    return sum(np.array(y_pred)*np.array(y_test)) / number_morphs, sum(np.array(y_pred_random)*np.array(y_test)) / number_morphs
 
 def cross_fold(data, number_folds, size_data_train):
     length_fold = round(len(data)/number_folds)
     folds = np.split(data, [i*length_fold for i in range(1, number_folds)], axis = 0)
-    prec = 0
+    prec, prec_random = 0, 0
     for i in range(number_folds):
         data_test = folds[i]
         data_train = pd.DataFrame()
         for j in range(number_folds):
             if j != i:
                 data_train = data_train.append(folds[j])
-        prec += calc_score(data_train, data_test, size_data_train)
-    return (prec / number_folds)
+        prec_i, prec_random_i = calc_score(data_train, data_test, size_data_train)
+        prec, prec_random = prec + prec_i, prec_random + prec_random_i
+    return prec / number_folds, prec_random / number_folds
 
 def random_forest(path_morphs, path_originals):
     results_morphs = determine_features(path_morphs)
@@ -83,4 +90,7 @@ def random_forest(path_morphs, path_originals):
     results_originals["Morph"] = 0
     results = results_morphs.append(results_originals).reset_index(drop=True).drop_duplicates("Image")
     results = results.sample(frac=1).reset_index(drop=True)
-    return cross_fold(results, 5, 500)
+    prec, prec_random = cross_fold(results, 5, 200)
+    print("The trained classifier predicts ", prec*100, "% of the morphed images correctly as morphs.")
+    print("A random choice predicts ", prec_random*100, "% of the morphed images correctly as morphs.")
+    return prec, prec_random
