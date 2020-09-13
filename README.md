@@ -1,6 +1,6 @@
 # Masterarbeit-TDA
 
-Code for my masters thesis "Topologische Datenanalyse: Persistente Homologie in Theorie und Praxis"
+Code for my master's thesis "Topologische Datenanalyse: Persistente Homologie in Theorie und Praxis"
 
 1. Barcodes: 
 * execute file "barcode_creation.py" to preprocess data from images and to calculate the persistence barcodes
