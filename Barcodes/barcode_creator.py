@@ -21,7 +21,7 @@ from barcode_creation.save_intervals import save_intervals
 #################################################################################
 # 1) Try to reproduce analysis from "On the Local Behavior of Spaces of Natural Images"
 
-# 1.1) Select randomly 5000 3x3-patches from each image, keep 20% of patches with highest D-norm 
+# 1.1) Randomly 5000 3x3-patches from each image, keep 20% of patches with highest D-norm 
 # --> 4.167*10^6 patches
 data = pd.DataFrame() 
 path = "VanHateren_Images\\"
@@ -56,7 +56,7 @@ use_javaplex(take_subset(super_dense_data, 5), "Super Dense Subset 3% ")
 
 
 #####################################################################################
-# 2) Use similar precedure to determine persistence barcodes for morphed and original passport photos
+# 2) Use similar procedure to determine persistence barcodes for morphed and original passport photos
 # Do not only save barcodes as pictures but also as intervals in a table (--> save_intervals)
 # --> we can use the intervals for further processing with machine learning techniques
 from PIL import Image
@@ -81,7 +81,7 @@ for file in os.listdir((path)): # contains pixel data from all images
     save_intervals(name, intervals)
 
 
-# 2.1) For original images (same precedure only different name for image title)
+# 2.1) For original images (same procedure, only different name for image title)
 path = "Original_Images\\"
 for file in os.listdir((path)): # contains pixel data from all images
     print(file)
