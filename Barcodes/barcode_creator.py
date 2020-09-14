@@ -24,7 +24,7 @@ from barcode_creation.save_intervals import save_intervals
 # 1.1) Select randomly 5000 3x3-patches from each image, keep 20% of patches with highest D-norm 
 # --> 4.167*10^6 patches
 data = pd.DataFrame() 
-path = "VanHaterem_Images\\"
+path = "VanHateren_Images\\"
 for file in os.listdir((path)): # contains pixel data from all images
     img = open_file(path, file)
     patches_img = select_patches(img, 5000) # randomly select 5000 patches from each image
