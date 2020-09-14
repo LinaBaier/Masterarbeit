@@ -17,5 +17,5 @@ Code for my master's thesis "Topologische Datenanalyse: Persistente Homologie in
 
 2. Morph_Detector:
 * execute file "morph_detector.py" to build a classifier to detect morphed images
-* classifier is based on features read off from "Features_Morphs+Originals", namely number, length and birth of barcodes
+* classifier is based on features read off from "Features_Morphs+Originals", namely number, length and birth of bars in barcodes
 * random forest from Python library skicit-learn is used to build classifier --> https://github.com/scikit-learn/scikit-learn
