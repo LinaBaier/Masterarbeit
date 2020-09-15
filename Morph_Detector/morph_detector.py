@@ -121,6 +121,6 @@ def morph_detector(path_morphs, path_originals):
 
 ########################################################################################################
 ########################################################################################################
-path_morphs = "Morph_Detector\\Features_Morphs+Originals\\Ergebnisse_Morphs.csv"
-path_originals = "Morph_Detector\\Features_Morphs+Originals\\Ergebnisse_Originals.csv"
+path_morphs = "Features_Morphs+Originals\\Ergebnisse_Morphs.csv"
+path_originals = "Features_Morphs+Originals\\Ergebnisse_Originals.csv"
 prec, prec_random = morph_detector(path_morphs, path_originals)
